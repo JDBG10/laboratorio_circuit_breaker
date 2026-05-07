@@ -3,7 +3,6 @@
 ## Integrantes
 
 - Juan David Bolaños Galindo
-- [Nombre del compañero]
 
 ---
 
