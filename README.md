@@ -79,6 +79,7 @@ laboratorio_circuit_breaker/
     ├── fase3.png
     ├── fase4.png
     └── fase5.png
+    └── half-open-circuit-breaker.png
 ```
 
 > El archivo `.env` no debe subirse al repositorio. Solo se debe subir `.env.example`.
