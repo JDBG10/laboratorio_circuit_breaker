@@ -669,6 +669,7 @@ La implementación del patrón Circuit Breaker permitió mejorar la resiliencia 
 
 El gateway ahora puede detectar cuando un servicio no responde, abrir el circuito, evitar llamadas innecesarias y permitir una recuperación automática mediante el estado `HALF_OPEN`.
 
+<<<<<<< HEAD
 Además, al manejar circuitos independientes por servicio, el sistema puede seguir funcionando parcialmente aunque uno de los servicios falle.
 
 Con esta implementación, el sistema Pet Shop es más tolerante a fallos, más estable y más adecuado para una arquitectura basada en microservicios.
@@ -678,3 +679,6 @@ Con esta implementación, el sistema Pet Shop es más tolerante a fallos, más e
 # Autor
 
 Proyecto académico desarrollado para el laboratorio de resiliencia y tolerancia a fallos con microservicios.
+=======
+Con esta implementación, el sistema Pet Shop es más tolerante a fallos y más estable.
+>>>>>>> 19be3444bcb2e1fe2bdfcd503bcea1520451f371
