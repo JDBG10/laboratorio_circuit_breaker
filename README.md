@@ -682,6 +682,9 @@ Con esta implementación, el sistema Pet Shop es más tolerante a fallos, más e
 
 ---
 
-# Autor
+## Autor
 
-Proyecto académico desarrollado para el laboratorio de resiliencia y tolerancia a fallos con microservicios.
+**Juan David Bolaños Galindo**  
+Estudiante de Ingeniería de Sistemas  
+
+Proyecto académico desarrollado para el laboratorio de resiliencia y tolerancia a fallos con microservicios, aplicando conceptos de microservicios, Docker, API Gateway y Circuit Breaker.
