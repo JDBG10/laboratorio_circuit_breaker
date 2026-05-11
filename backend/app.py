@@ -71,26 +71,5 @@ def crear_mascota():
     return jsonify({"mensaje": "Mascota creada", "id": nuevo_id}), 201
 
 
-@app.route("/relacion")
-def relacion():
-    """Mascotas enriquecidas con datos del dueño (consulta al servicio de usuarios)."""
-    resp         = requests.get("http://usuarios:5000/usuarios", timeout=2)
-    usuarios_map = {u["id"]: u for u in resp.json()}
-
-    conn   = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nombre, tipo, raza, edad, id_usuario FROM mascotas")
-    filas  = cursor.fetchall()
-    conn.close()
-
-    return jsonify({"relaciones": [
-        {
-            "mascota": {"id": f[0], "nombre": f[1], "tipo": f[2], "raza": f[3], "edad": f[4]},
-            "dueno"  : usuarios_map.get(f[5], {"nombre": "Desconocido", "correo": "-"})
-        }
-        for f in filas
-    ]})
-
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
