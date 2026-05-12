@@ -1,12 +1,13 @@
-# Laboratorio - Circuit Breaker
+Listo, Juan. Organicé tu README completo con las correcciones: estructura correcta, ruta `/corte_3/laboratorio_circuit_breaker/`, sin subir `.env`, Fase 1 mejor explicada y tabla de comandos al final. Tomé como base el README que subiste. 
+
+Copia y pega esto completo en tu `README.md`:
+
+````markdown
+# Laboratorio: Sistema que aprende a fallar
 
 Implementación del patrón **Circuit Breaker** usando microservicios con **Flask** y **Docker Compose**.
 
-El objetivo del laboratorio es analizar el comportamiento de un sistema distribuido ante fallos de servicios y aplicar mecanismos de resiliencia mediante los estados:
-
-- `CLOSED`
-- `OPEN`
-- `HALF_OPEN`
+El objetivo del laboratorio es analizar el comportamiento de un sistema distribuido cuando uno de sus servicios falla, y aplicar una solución que permita proteger el gateway, controlar los errores y recuperar el servicio de forma automática.
 
 ---
 
@@ -16,18 +17,21 @@ El objetivo del laboratorio es analizar el comportamiento de un sistema distribu
 
 ---
 
-## Descripción
+## Descripción general
 
-Este laboratorio implementa el patrón **Circuit Breaker** en un sistema tipo **Pet Shop** con varios servicios.
+Este laboratorio implementa el patrón **Circuit Breaker** en un sistema tipo **Pet Shop**, compuesto por varios servicios.
 
-El sistema cuenta con un **gateway en Flask**, encargado de recibir las peticiones del usuario y redirigirlas a los servicios correspondientes:
+El sistema cuenta con un **gateway en Flask**, encargado de recibir las peticiones del usuario y redirigirlas a los servicios correspondientes.
+
+Los servicios principales son:
 
 - Mascotas
 - Usuarios
 - Relación mascota-usuario
 - Resumen
 
-El Circuit Breaker permite controlar los fallos de los servicios. Si un servicio deja de responder, el gateway no insiste de manera indefinida, sino que abre el circuito, bloquea temporalmente las peticiones y luego realiza una prueba para verificar si el servicio se recuperó.
+El Circuit Breaker permite controlar los fallos de los servicios.  
+Cuando un servicio deja de responder, el gateway no sigue insistiendo de forma indefinida. En cambio, abre el circuito, bloquea temporalmente las peticiones y luego realiza una prueba para verificar si el servicio ya se recuperó.
 
 ---
 
@@ -46,7 +50,27 @@ El Circuit Breaker permite controlar los fallos de los servicios. Si un servicio
 
 Para ejecutar el proyecto se necesita:
 
-- Docker Desktop
+- Docker Desktop instalado y en ejecución.
+
+---
+
+## Ruta de entrega solicitada
+
+La entrega del laboratorio debe quedar organizada de la siguiente manera:
+
+```bash
+/corte_3/
+└── laboratorio_circuit_breaker/
+    ├── README.md
+    ├── docker-compose.yml
+    ├── .env.example
+    ├── .gitignore
+    ├── gateway/
+    ├── usuarios/
+    ├── backend/
+    ├── db/
+    └── evidencias/
+```
 
 ---
 
@@ -55,7 +79,6 @@ Para ejecutar el proyecto se necesita:
 ```bash
 laboratorio_circuit_breaker/
 ├── docker-compose.yml
-├── .env
 ├── .env.example
 ├── .gitignore
 ├── README.md
@@ -78,11 +101,11 @@ laboratorio_circuit_breaker/
     ├── fase2.png
     ├── fase3.png
     ├── fase4.png
-    └── fase5.png
+    ├── fase5.png
     └── half-open-circuit-breaker.png
 ```
 
-> El archivo `.env` no debe subirse al repositorio. Solo se debe subir `.env.example`.
+> El archivo `.env` se crea localmente a partir de `.env.example`, pero no se sube al repositorio porque contiene la configuración del proyecto.
 
 ---
 
@@ -99,7 +122,7 @@ git clone URL_DEL_REPOSITORIO
 ### 2. Entrar a la carpeta del proyecto
 
 ```bash
-cd laboratorio_circuit_breaker
+cd corte_3/laboratorio_circuit_breaker
 ```
 
 ---
@@ -167,13 +190,13 @@ CB_TIMEOUT_HTTP=2
 
 ## Funcionamiento del Circuit Breaker
 
-El sistema implementa los tres estados principales del patrón Circuit Breaker:
+El sistema implementa tres estados principales:
 
 | Estado | Descripción |
 |---|---|
 | `CLOSED` | El servicio funciona normalmente y las peticiones pasan |
 | `OPEN` | El circuito se abre porque el servicio falló varias veces |
-| `HALF_OPEN` | Se permite una petición de prueba para validar si el servicio se recuperó |
+| `HALF_OPEN` | Se permite una petición de prueba para saber si el servicio ya se recuperó |
 
 ---
 
@@ -220,15 +243,20 @@ docker compose logs -f gateway
 
 ## Resultado observado
 
-El gateway intentó comunicarse con el servicio de mascotas, pero como el servicio estaba apagado, empezó a registrar fallos.
+En esta fase se observó el comportamiento inicial del sistema al apagar el servicio de mascotas.
 
-Después de varios intentos fallidos, el Circuit Breaker abrió el circuito para evitar seguir enviando peticiones a un servicio que no estaba disponible.
+Como el endpoint `/mascotas` ya tenía una lógica básica de Circuit Breaker trabajada en clase, el gateway detectó los fallos y abrió el circuito después de varios intentos.
+
+Esto permitió que el sistema no siguiera insistiendo todo el tiempo sobre el servicio caído.
 
 ---
 
-## ¿Se protege o insiste?
+## Respuestas de la fase
 
-El sistema se protege, porque cuando el circuito pasa a estado `OPEN`, deja de enviar peticiones al servicio caído durante un tiempo definido.
+| Pregunta | Respuesta |
+|---|---|
+| ¿Qué hace el sistema actualmente? | El gateway intenta comunicarse con el servicio de mascotas. Al detectar varios fallos, abre el circuito. |
+| ¿Se protege o insiste? | El sistema se protege, porque después de varios fallos deja de enviar peticiones al servicio caído por un tiempo definido. |
 
 ---
 
@@ -242,7 +270,7 @@ El sistema se protege, porque cuando el circuito pasa a estado `OPEN`, deja de e
 
 ## Objetivo
 
-Extender el patrón Circuit Breaker a varios servicios del sistema usando una clase reutilizable.
+Extender el patrón Circuit Breaker a varios servicios del sistema, no solo al endpoint de mascotas.
 
 ---
 
@@ -271,11 +299,20 @@ cb_relacion = CircuitBreaker("relacion", CB_UMBRAL_FALLOS, CB_TIEMPO_ESPERA)
 
 ## Decisiones tomadas
 
-Se decidió manejar un circuito independiente para cada servicio.
+| Pregunta | Respuesta |
+|---|---|
+| ¿Cada servicio debe tener su propio contador de fallos? | Sí. Cada servicio debe tener su propio contador porque no todos fallan al mismo tiempo. |
+| ¿El circuito debe abrirse de forma independiente por servicio? | Sí. Si falla mascotas, solo se abre el circuito de mascotas, pero usuarios puede seguir funcionando. |
+| ¿Qué pasa si falla un servicio pero el otro sigue funcionando? | El servicio que falla queda bloqueado temporalmente, pero los demás servicios siguen respondiendo normalmente. |
 
-Esto permite que si falla el servicio de mascotas, el servicio de usuarios pueda seguir funcionando normalmente.
+---
 
-También se decidió configurar los parámetros desde el archivo `.env`, para no dejar valores fijos dentro del código.
+## Explicación breve
+
+Se decidió manejar un Circuit Breaker independiente por servicio.  
+Esto permite que el sistema sea más estable, porque la falla de un servicio no afecta de forma directa a los demás.
+
+También se configuraron los parámetros desde el archivo `.env`, para evitar dejar valores fijos dentro del código.
 
 ---
 
@@ -295,37 +332,58 @@ Comprender el funcionamiento del estado `HALF_OPEN` dentro del patrón Circuit B
 
 ## ¿Qué significa HALF_OPEN?
 
-`HALF_OPEN` es un estado de prueba.
+`HALF_OPEN` significa que el sistema entra en un estado de prueba.
 
-Cuando el circuito está en `OPEN`, el sistema bloquea temporalmente las peticiones. Después de cumplirse el tiempo de espera configurado, el circuito pasa a `HALF_OPEN`.
+Cuando el circuito está en `OPEN`, el gateway bloquea temporalmente las peticiones hacia el servicio que falló.
 
-En ese momento, el gateway permite una petición de prueba para verificar si el servicio ya se recuperó.
+Después de cumplirse el tiempo de espera configurado, el circuito pasa a `HALF_OPEN`.  
+En ese momento, el gateway permite una sola petición de prueba para saber si el servicio ya volvió a funcionar.
 
-### Imagen explicativa de HALF_OPEN
+---
 
-<p align="center">
-  <img src="evidencias/half-open-circuit-breaker.png" alt="Explicación del estado HALF_OPEN en Circuit Breaker" width="850">
-</p>
+## ¿Cuándo se vuelve a intentar una llamada?
+
+Se vuelve a intentar una llamada cuando ya pasó el tiempo de espera definido en la configuración.
+
+En este laboratorio, el tiempo de espera usado fue:
+
+```env
+CB_TIEMPO_ESPERA=15
+```
+
+Esto significa que el gateway espera 15 segundos antes de probar nuevamente el servicio.
+
+---
+
+## ¿Qué pasa si el servicio vuelve a fallar?
+
+Si la petición de prueba falla, el circuito vuelve al estado `OPEN`.
+
+```txt
+HALF_OPEN → OPEN
+```
+
+Esto quiere decir que el servicio todavía no está listo y el gateway lo vuelve a bloquear temporalmente.
 
 ---
 
 ## ¿Qué pasa si la prueba funciona?
 
-Si la petición funciona correctamente, el circuito vuelve a estado `CLOSED`.
+Si la petición de prueba funciona correctamente, el circuito vuelve al estado `CLOSED`.
 
 ```txt
 HALF_OPEN → CLOSED
 ```
 
+Esto significa que el servicio ya se recuperó y puede recibir peticiones normalmente.
+
 ---
 
-## ¿Qué pasa si la prueba falla?
+## Imagen explicativa de HALF_OPEN
 
-Si la petición vuelve a fallar, el circuito regresa al estado `OPEN`.
-
-```txt
-HALF_OPEN → OPEN
-```
+<p align="center">
+  <img src="evidencias/half-open-circuit-breaker.png" alt="Explicación del estado HALF_OPEN en Circuit Breaker" width="850">
+</p>
 
 ---
 
@@ -357,9 +415,18 @@ if self.estado == self.OPEN:
 
 ---
 
+## Explicación del código
+
+El código revisa si el circuito está abierto.  
+Si está en estado `OPEN`, compara el tiempo actual con el momento en que se abrió el circuito.
+
+Cuando ya pasó el tiempo de espera, el circuito cambia a `HALF_OPEN` y permite hacer una prueba para saber si el servicio se recuperó.
+
+---
+
 ## Procedimiento de prueba
 
-Primero se apagó el servicio:
+Primero se apagó el servicio de mascotas:
 
 ```bash
 docker compose stop backend
@@ -395,11 +462,13 @@ Si la petición de prueba funcionaba, el circuito volvía a `CLOSED`.
 
 ## Flujo validado
 
+Cuando el servicio se recupera:
+
 ```txt
 CLOSED → OPEN → HALF_OPEN → CLOSED
 ```
 
-Si falla en la prueba:
+Cuando el servicio sigue fallando:
 
 ```txt
 HALF_OPEN → OPEN
@@ -528,6 +597,18 @@ Ejemplo en `/estado`:
 
 ---
 
+## Resultado general de validación
+
+| Escenario probado | Resultado |
+|---|---|
+| Servicio funcionando | El gateway respondió correctamente. |
+| Servicio caído | El gateway detectó los fallos. |
+| Circuito abierto | El gateway bloqueó temporalmente las peticiones. |
+| Recuperación del servicio | El circuito pasó a `HALF_OPEN` y luego a `CLOSED`. |
+| Servicios independientes | La falla de un servicio no afectó a los demás. |
+
+---
+
 ## Evidencia
 
 ![Fase 5](evidencias/fase5.png)
@@ -570,86 +651,42 @@ Durante las pruebas, en los logs del gateway se pueden observar mensajes similar
 [CB:mascotas] HALF_OPEN exitoso → CLOSED
 ```
 
----
-
-# Comandos útiles
-
-## Levantar el proyecto
-
-```bash
-docker compose up --build
-```
+Estos logs ayudan a confirmar que el Circuit Breaker está cambiando correctamente de estado.
 
 ---
 
-## Ver contenedores
+# Tabla de comandos utilizados
 
-```bash
-docker compose ps
-```
-
----
-
-## Detener backend
-
-```bash
-docker compose stop backend
-```
-
----
-
-## Iniciar backend
-
-```bash
-docker compose start backend
-```
-
----
-
-## Ver logs del gateway
-
-```bash
-docker compose logs -f gateway
-```
-
----
-
-## Agregar evidencias al repositorio
-
-```bash
-git add README.md evidencias/
-git commit -m "Agrega evidencias del laboratorio Circuit Breaker"
-git push
-```
+| Comando | ¿Para qué se usa? |
+|---|---|
+| `docker compose up --build` | Levanta y construye todos los servicios del proyecto. |
+| `docker compose ps` | Muestra qué contenedores están activos. |
+| `docker compose logs -f gateway` | Muestra los logs del gateway en tiempo real. |
+| `docker compose logs -f backend` | Muestra los logs del servicio de mascotas. |
+| `docker compose logs -f usuarios` | Muestra los logs del servicio de usuarios. |
+| `docker compose stop backend` | Apaga el servicio de mascotas para probar fallos. |
+| `docker compose start backend` | Vuelve a encender el servicio de mascotas. |
+| `docker compose stop usuarios` | Apaga el servicio de usuarios para probar fallos. |
+| `docker compose start usuarios` | Vuelve a encender el servicio de usuarios. |
+| `git add README.md evidencias/` | Agrega el README y las imágenes al repositorio. |
+| `git commit -m "Agrega evidencias del laboratorio Circuit Breaker"` | Guarda los cambios realizados. |
+| `git push` | Sube los cambios al repositorio remoto. |
 
 ---
 
 # Análisis final
 
-## Mejoras obtenidas
-
-Con la implementación del Circuit Breaker se obtuvieron las siguientes mejoras:
-
-- Recuperación automática del servicio.
-- Independencia entre servicios.
-- Configuración externa mediante `.env`.
-- Respuestas rápidas cuando un servicio falla.
-- Monitoreo del estado de los circuitos mediante `/estado`.
-- Evita que el gateway insista continuamente sobre servicios caídos.
-
----
-
 ## ¿Qué cambió en el comportamiento del sistema?
 
 Antes, el gateway podía seguir intentando conectarse a un servicio caído.
 
-Ahora, con Circuit Breaker, el sistema detecta los fallos, abre el circuito, espera un tiempo y luego prueba si el servicio se recuperó.
+Ahora, con el Circuit Breaker, el sistema detecta los fallos, abre el circuito, espera un tiempo y luego prueba si el servicio se recuperó.
 
 Esto permite que el sistema falle de forma controlada y no afecte todos los servicios.
 
 ---
 
-## ¿Qué decisiones se tomaron?
+## ¿Qué decisiones se tomaron en la implementación?
 
 Se decidió usar un Circuit Breaker independiente por servicio.
 
@@ -657,16 +694,34 @@ Esto permite que cada servicio tenga su propio contador de fallos y su propio es
 
 También se agregó el estado `HALF_OPEN`, porque permite validar si un servicio se recuperó sin necesidad de reiniciar el gateway.
 
+Además, se decidió manejar la configuración desde el archivo `.env.example`, para que los valores como el número de fallos, el tiempo de espera y el timeout puedan modificarse fácilmente.
+
 ---
 
-## Dificultades encontradas
+## ¿Qué dificultades se encontraron?
 
 Durante la práctica se encontraron algunas dificultades:
 
 - Entender que cada servicio debía manejar sus fallos de forma independiente.
 - Validar correctamente los cambios de estado.
-- Revisar logs para confirmar el paso de `CLOSED` a `OPEN`, luego a `HALF_OPEN` y finalmente a `CLOSED`.
+- Revisar los logs para confirmar el paso de `CLOSED` a `OPEN`, luego a `HALF_OPEN` y finalmente a `CLOSED`.
 - Ajustar los tiempos de espera para observar mejor el comportamiento del circuito.
+- Probar varias veces apagando y encendiendo servicios para comprobar la recuperación.
+
+---
+
+# Mejoras obtenidas
+
+Con la implementación del Circuit Breaker se obtuvieron las siguientes mejoras:
+
+| Mejora | Explicación |
+|---|---|
+| Recuperación automática | El sistema puede volver a probar si el servicio ya funciona. |
+| Independencia entre servicios | Si falla un servicio, los demás pueden seguir funcionando. |
+| Configuración externa | Los valores principales se manejan desde `.env.example`. |
+| Respuestas más rápidas | El gateway no pierde tiempo insistiendo sobre servicios caídos. |
+| Monitoreo | El endpoint `/estado` permite ver cómo están los circuitos. |
+| Mayor estabilidad | El sistema responde de forma más controlada ante fallos. |
 
 ---
 
@@ -688,3 +743,4 @@ Con esta implementación, el sistema Pet Shop es más tolerante a fallos, más e
 Estudiante de Ingeniería de Sistemas  
 
 Proyecto académico desarrollado para el laboratorio de resiliencia y tolerancia a fallos con microservicios, aplicando conceptos de microservicios, Docker, API Gateway y Circuit Breaker.
+````
