@@ -1,8 +1,3 @@
-Listo, Juan. Organicé tu README completo con las correcciones: estructura correcta, ruta `/corte_3/laboratorio_circuit_breaker/`, sin subir `.env`, Fase 1 mejor explicada y tabla de comandos al final. Tomé como base el README que subiste. 
-
-Copia y pega esto completo en tu `README.md`:
-
-````markdown
 # Laboratorio: Sistema que aprende a fallar
 
 Implementación del patrón **Circuit Breaker** usando microservicios con **Flask** y **Docker Compose**.
@@ -743,4 +738,3 @@ Con esta implementación, el sistema Pet Shop es más tolerante a fallos, más e
 Estudiante de Ingeniería de Sistemas  
 
 Proyecto académico desarrollado para el laboratorio de resiliencia y tolerancia a fallos con microservicios, aplicando conceptos de microservicios, Docker, API Gateway y Circuit Breaker.
-````
