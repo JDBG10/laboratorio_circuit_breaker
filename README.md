@@ -49,26 +49,6 @@ Para ejecutar el proyecto se necesita:
 
 ---
 
-## Ruta de entrega solicitada
-
-La entrega del laboratorio debe quedar organizada de la siguiente manera:
-
-```bash
-/corte_3/
-└── laboratorio_circuit_breaker/
-    ├── README.md
-    ├── docker-compose.yml
-    ├── .env.example
-    ├── .gitignore
-    ├── gateway/
-    ├── usuarios/
-    ├── backend/
-    ├── db/
-    └── evidencias/
-```
-
----
-
 ## Estructura del repositorio
 
 ```bash
