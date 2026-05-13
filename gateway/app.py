@@ -196,7 +196,7 @@ def relacion():
         for mascota in mascotas:
             relaciones.append({
                 "mascota": mascota,
-                "dueno": usuarios_map.get(
+                "usuario": usuarios_map.get(
                     mascota.get("id_usuario"),
                     {"mensaje": "Dueño no encontrado"}
                 )
