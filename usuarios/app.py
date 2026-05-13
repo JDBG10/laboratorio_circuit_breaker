@@ -29,16 +29,27 @@ def home():
 
 @app.route("/usuarios", methods=["GET"])
 def listar_usuarios():
-    conn   = get_connection()
+    conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, nombre, correo, telefono, fecha_nac FROM usuarios")
-    filas  = cursor.fetchall()
-    conn.close()
-    return jsonify([
-        {"id": f[0], "nombre": f[1], "correo": f[2], "telefono": f[3], "fecha_nac": str(f[4])}
-        for f in filas
-    ])
 
+    cursor.execute("SELECT id, nombre, correo, telefono, fecha_nac FROM usuarios")
+    filas = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        "usuarios": [
+            {
+                "id": f[0],
+                "nombre": f[1],
+                "correo": f[2],
+                "telefono": f[3],
+                "fecha_nac": str(f[4])
+            }
+            for f in filas
+        ]
+    })
 
 @app.route("/usuarios/<int:id_usuario>", methods=["GET"])
 def obtener_usuario(id_usuario):
