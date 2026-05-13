@@ -84,7 +84,7 @@ class CircuitBreaker:
 
 
 
-CB_UMBRAL_FALLOS = int(os.getenv("CB_UMBRAL_FALLOS", 2))
+CB_UMBRAL_FALLOS = int(os.getenv("CB_UMBRAL_FALLOS", 3))
 CB_TIEMPO_ESPERA = int(os.getenv("CB_TIEMPO_ESPERA", 30))
 CB_TIMEOUT_HTTP  = int(os.getenv("CB_TIMEOUT_HTTP",  2))
 
